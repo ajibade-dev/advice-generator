@@ -6,21 +6,25 @@ import dice from "./images/icon-dice.svg"
 const Advice = () => {
     const [datas, setDatas] = useState("")
     const [ids, setIds] = useState("")
+    const [loading, setLoading] = useState(false)
 
     useEffect(() => {
         fetchingData()
     }, [])
 
-  const fetchingData = () =>  {fetch(`https://api.adviceslip.com/advice`)
+  const fetchingData = () =>  {
+    setLoading(true)
+    fetch(`https://api.adviceslip.com/advice`)
     .then(res => res.json())
     .then(data => {
         const quotes = data.slip.advice;
         setDatas(quotes);
         const identity = data.slip.id;
         setIds(identity)
-        console.log(data.slip.advice,data.slip.id)
-    })
-        };
+        setLoading(false)
+    }
+    ).catch(err => err("Not found")
+    )};
 
   return (
     <div className='flex justify-center items-center h-screen'>
@@ -32,7 +36,7 @@ const Advice = () => {
         <img src={mobile} alt="" className='mt-8 md:hidden flex'/>
 
         <div className='absolute rounded-full bg-neon-green p-4 bottom-[-10%] hover:shadow-lg hover:shadow-green-400' onClick={fetchingData}>
-            <img src={dice} alt="" />
+            <img src={dice} alt="" className={loading ? "animate-spin" :"animate-pulse"}/>
         </div>
         </div>
        
